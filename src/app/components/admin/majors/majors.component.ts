@@ -104,6 +104,7 @@ export class MajorsComponent implements OnInit {
     this.openModal();
   }
 
+  
   deleteMajor(major: Major){
 
     if (confirm('Do you want to delete this major?')) {

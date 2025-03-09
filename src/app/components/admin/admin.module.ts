@@ -11,8 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 
 const routes: Routes = [
+
   {
-    path: '',
+    path: 'admin',
     component: AdminComponent,
     children :[
       {path: 'students', component: StudentsComponent},
@@ -20,11 +21,14 @@ const routes: Routes = [
       {path: 'majors', component: MajorsComponent},
 
 
-      { path: '', redirectTo: '/students', pathMatch: 'full' },
+      { path: '', redirectTo: '/admin/students', pathMatch: 'full' },
 
     ]
+  },
+{ path: '', redirectTo: 'admin/students', pathMatch: 'full' },
+{ path: '**', redirectTo: 'admin/students', pathMatch: 'full' }
 
-  }
+
 ];
 
 

@@ -1,33 +1,35 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Majors</h3>
-        <button class="btn btn-primary" (click)="openModal()">+ Create majors</button>
+        <h3>User Account</h3>
+        <button class="btn btn-primary"  (click)="openModal()">+ Create user</button>
     </div>
 
     <table class="table table-bordered table-hover shadow">
         <thead class="table-dark">
             <tr>
                 <th>No</th>
-                <th>Name</th>
-                <th>Description</th>
+                <th>User name</th>
+                <th>Gmail</th>
+                <th>Password</th>
+                <th>Role</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <!-- Dữ liệu mẫu -->
+            <!-- Dữ liệu mẫu
             <tr *ngFor ="let major of majors; let i = index ">
                 <td>{{i + 1}}</td>
                 <td>{{major.name}}</td>
                 <td>{{major.description}}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm me-2" (click)="updateMajor(major)">
+                    <button class="btn btn-warning btn-sm me-2" (click)="updateUserAccount(major)">
                         Update
                     </button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteMajor(major)">
+                    <button class="btn btn-danger btn-sm" (click)="deleteUserAccount(major)">
                         Delete
                     </button>
                 </td>
-            </tr>
+            </tr> -->
 
         </tbody>
     </table>
@@ -39,16 +41,31 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">New Major</h5>
+                <h5 class="modal-title">New User Account</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng" (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
-                    <form (ngSubmit)="onSubmit()" [formGroup]="majorForm">
+                    <form  [formGroup]="userForm">
                         <div class="mb-2">
-                            <input type="text" class="form-control" formControlName="name" id="majorName" placeholder="Name">
+                            <input type="text" class="form-control" formControlName="username" id="username" placeholder="Username">
                         </div>
                         <div class="mb-2">
-                            <textarea class="form-control" formControlName="description" id="description" rows="2" placeholder="Description"></textarea>
+                            <input class="form-control" formControlName="password" id="password" rows="2" placeholder="Password">
+                        </div>
+
+                        <div class="mb-2">
+                            <input class="form-control" formControlName="email" id="email" rows="2" placeholder="Email">
+                        </div>
+
+                        <div class="mb-2">
+                            <select class="form-control" formControlName="role" required>
+                                <option value="" disabled selected>Choose category</option>
+                                <option >Student</option>
+                                <option >Tutor</option>
+                                <option >Admin</option>
+                            </select>
+
+
                         </div>
 
                         <div *ngIf="checkSaveOrUpdate == 0">
@@ -74,6 +91,3 @@
     </div>
 
 </div>
-
-
-

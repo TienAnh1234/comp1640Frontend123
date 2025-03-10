@@ -1,0 +1,30 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { User } from '../common/user';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+
+  private userUrl = 'http://localhost:8080/api/user';
+
+
+  constructor(private HttpClient: HttpClient) { }
+
+
+  saveUser(user: User): Observable<any> {
+    const saveMajor = `${this.userUrl}/save_user`;
+    return this.HttpClient.post(saveMajor, user);
+  }
+
+  getUserList(): Observable<any> {
+    return this.HttpClient.get<any>(this.userUrl);
+  }
+
+  updateUser(user: User, userId: number):Observable<any>{
+    return this.HttpClient.put(`${this.userUrl}/update/${userId}`, user);
+  }
+
+}

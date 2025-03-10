@@ -7,6 +7,7 @@ import { TutorsComponent } from './tutors/tutors.component';
 import { MajorsComponent } from './majors/majors.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { UserAccountComponent } from './user-account/user-account.component';
 
 
 
@@ -19,6 +20,7 @@ const routes: Routes = [
       {path: 'students', component: StudentsComponent},
       {path: 'tutors', component: TutorsComponent},
       {path: 'majors', component: MajorsComponent},
+      {path: 'usersAccount', component: UserAccountComponent},
 
 
       { path: '', redirectTo: '/admin/students', pathMatch: 'full' },
@@ -34,7 +36,9 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    UserAccountComponent
+  ],
   imports: [
     RouterModule.forRoot(routes),
     CommonModule,

@@ -14,9 +14,9 @@ export class UserService {
   constructor(private HttpClient: HttpClient) { }
 
 
-  saveUser(user: User): Observable<any> {
+  saveUser(definedUserFormData: FormData): Observable<any> {
     const saveMajor = `${this.userUrl}/save_user`;
-    return this.HttpClient.post(saveMajor, user);
+    return this.HttpClient.post(saveMajor, definedUserFormData);
   }
 
   getUserList(): Observable<any> {

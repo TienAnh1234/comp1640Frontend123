@@ -1,3 +1,5 @@
+import { Major } from "./major";
+
 export class Tutor {
 
     constructor(
@@ -6,6 +8,7 @@ export class Tutor {
         public gmail: string,
         public birtday: Date,
         public imageUrl :string,
+        public major :Major
     ){}
 
 

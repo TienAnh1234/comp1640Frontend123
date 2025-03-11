@@ -9,27 +9,29 @@
             <tr>
                 <th>No</th>
                 <th>User name</th>
-                <th>Gmail</th>
+                <th>Email</th>
                 <th>Password</th>
                 <th>Role</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <!-- Dữ liệu mẫu
-            <tr *ngFor ="let major of majors; let i = index ">
+            <tr *ngFor ="let user of users; let i = index ">
                 <td>{{i + 1}}</td>
-                <td>{{major.name}}</td>
-                <td>{{major.description}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.password}}</td>
+                <td>{{user.role}}</td>
+
                 <td>
-                    <button class="btn btn-warning btn-sm me-2" (click)="updateUserAccount(major)">
+                    <button class="btn btn-warning btn-sm me-2" (click)="updateUserAccount(user)">
                         Update
                     </button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteUserAccount(major)">
+                    <button class="btn btn-danger btn-sm" (click)="deleteUserAccount(user)">
                         Delete
                     </button>
                 </td>
-            </tr> -->
+            </tr>
 
         </tbody>
     </table>
@@ -45,7 +47,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng" (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
-                    <form  [formGroup]="userForm">
+                    <form  [formGroup]="userForm" (ngSubmit)="onSubmit()">
                         <div class="mb-2">
                             <input type="text" class="form-control" formControlName="username" id="username" placeholder="Username">
                         </div>
@@ -58,14 +60,34 @@
                         </div>
 
                         <div class="mb-2">
-                            <select class="form-control" formControlName="role" required>
-                                <option value="" disabled selected>Choose category</option>
-                                <option >Student</option>
-                                <option >Tutor</option>
-                                <option >Admin</option>
+                            <input class="form-control" formControlName="name" id="name" rows="2" placeholder="Name">
+                        </div>
+
+                        <div class="mb-2">
+                            <input  type="date" class="form-control" formControlName="birthday" id="birthday" rows="2" placeholder="Birthday">
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="productImage">Image</label><br>
+                            <input type="file" id="imageFile" class="form-control" (change)="onFileSelected($event)" formControlName="imageFile" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <select class="form-control" formControlName="role" required id="role">
+                                <option value="" disabled selected>Choose role</option>
+                                <option value="STUDENT">Student</option>
+                                <option value="TUTOR">Tutor</option>
+                                <option value="ADMIN">Admin</option>
                             </select>
+                        </div>
 
-
+                        <div class="mb-2" *ngIf="showMajor">
+                            <select class="form-control" formControlName="major" required id="major">
+                                <option value="" disabled selected>Choose major</option>
+                                <option *ngFor="let major of majors"  [value]="major.id">
+                                    {{major.name}}
+                                </option>
+                            </select>
                         </div>
 
                         <div *ngIf="checkSaveOrUpdate == 0">
@@ -79,6 +101,10 @@
                                 <button type="submit" class="btn btn-success">Update</button>
                             </div>
                         </div>
+
+                        <div *ngIf="showNotification" class="alert alert-danger mt-3">
+                            Please fill out all required fields.
+                        </div>  
 
                     </form>
                 

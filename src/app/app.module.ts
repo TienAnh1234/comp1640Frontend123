@@ -11,6 +11,7 @@ import { MajorsComponent } from './components/admin/majors/majors.component';
 import { AdminModule } from './components/admin/admin.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'; 
+import { UserAccountComponent } from './components/admin/user-account/user-account.component';
 
 
 
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     MajorsComponent,
     AdminComponent,
     UserComponent
+  
   ],
   imports: [
     BrowserModule,

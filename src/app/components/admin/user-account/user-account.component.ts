@@ -12,23 +12,36 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class UserAccountComponent implements OnInit {
 
+
 @ViewChild('myModal') model: ElementRef | undefined;
+@ViewChild('myModalUpdateUser') modelUpdateUser: ElementRef | undefined;
+
 
   userForm!: FormGroup;
+  userFormUpdate!: FormGroup;
+
   users: User[] =[];
   majors: Major[] =[];
   
-  checkSaveOrUpdate: number = 0;
   userUpdateId!: number;
   showNotification = false;
   selectedFile!: File;
   showMajor: Boolean =false;
+
+
 
   constructor(private formBuilder: FormBuilder,
               private majorService: MajorService,
               private userService: UserService) { }
 
   ngOnInit(): void {
+          this.userFormUpdate = this.formBuilder.group({
+            username: ['', [Validators.required, Validators.minLength(3)]],
+            password: ['', [Validators.required, Validators.minLength(3)]],
+            email: ['', [Validators.required, Validators.minLength(3)]],
+            role: [],
+          });
+
           this.userForm = this.formBuilder.group({
             username: ['', [Validators.required, Validators.minLength(3)]],
             password: ['', [Validators.required, Validators.minLength(3)]],
@@ -36,9 +49,8 @@ export class UserAccountComponent implements OnInit {
             role: ['', [Validators.required, Validators.minLength(3)]],
             name: ['', [Validators.required, Validators.minLength(3)]],
             birthday: ['', [Validators.required, Validators.minLength(3)]],
-            imageFile: ['', [Validators.required, Validators.minLength(3)]],
+            imageFile: ['', [Validators.required]],
             major: [''],
-
           });
           this.listUser();
           this.listMajor();
@@ -50,11 +62,9 @@ export class UserAccountComponent implements OnInit {
             } else {
               // Nếu chọn "ADMIN", ẩn dropdown Major và xóa giá trị đã chọn trước đó
               this.showMajor = false;
-              this.userForm.patchValue({
+              this.userForm.patchValue({  
                 major: ''
               });
-
-
             }
           });
 
@@ -74,16 +84,53 @@ openModal() {
   }
 }
 
+openModalUpdate() {
+  const modalElement = document.getElementById('myModalUpdateUser');
+  if (modalElement) {
+    modalElement.style.display = 'block';
+  }
+}
+
 closeModal() {
   if (this.model) {
     this.model.nativeElement.style.display = 'none';
   }
 }
 
+closeModalUpdate() {
+  if (this.modelUpdateUser) {
+    this.modelUpdateUser.nativeElement.style.display = 'none';
+  }
+}
+
+
+onSubmitUpdate() {
+  if(this.userFormUpdate.valid == false){
+    this.showNotification = true;
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 3000);
+    console.log('Form không hợp lệ!', this.userForm.controls);
+  }else{
+    const newUser: User = {
+      username: this.userFormUpdate.value.username,
+      password: this.userFormUpdate.value.password,
+      email: this.userFormUpdate.value.email,
+      role: this.userFormUpdate.value.role
+    };
+    console.log(newUser);
+    this.userService.updateUser(newUser, this.userUpdateId).subscribe(
+      data =>{
+        console.log(data);  
+          this.listUser();
+      }
+    )
+    this.closeModalUpdate();  
+
+  }
+}
 
   onSubmit() {
-
-
     if(this.userForm.valid == false){
       this.showNotification = true;
       setTimeout(() => {
@@ -92,42 +139,24 @@ closeModal() {
       console.log('Form không hợp lệ!', this.userForm.controls);
 
     }else{
-      
-      const definedUserFormData = new FormData();
-      definedUserFormData.append('username', this.userForm.value.username);
-      definedUserFormData.append('password', this.userForm.value.password);
-      definedUserFormData.append('email', this.userForm.value.email);
-      definedUserFormData.append('role', this.userForm.value.role);
-      definedUserFormData.append('name', this.userForm.value.name);
-      definedUserFormData.append('birthday', this.userForm.value.birthday);
-      definedUserFormData.append('imageFile', this.userForm.value.imageFile);
+        const definedUserFormData = new FormData();
+        definedUserFormData.append('username', this.userForm.value.username);
+        definedUserFormData.append('password', this.userForm.value.password);
+        definedUserFormData.append('email', this.userForm.value.email);
+        definedUserFormData.append('role', this.userForm.value.role);
+        definedUserFormData.append('name', this.userForm.value.name);
+        definedUserFormData.append('birthday', this.userForm.value.birthday);
+        definedUserFormData.append('imageFile', this.userForm.value.imageFile);
+        definedUserFormData.append('major', this.userForm.value.major);
+        definedUserFormData.append('file', this.selectedFile);
 
-      definedUserFormData.append('major', this.userForm.value.major);
-      definedUserFormData.append('file', this.selectedFile);
-
-      if(this.checkSaveOrUpdate == 0){
         this.userService.saveUser(definedUserFormData).subscribe(
           data =>{
             this.listUser();
           }
         ) 
         this.closeModal();  
-      }
-  
-      if(this.checkSaveOrUpdate == 1){
-        // this.userService.updateUser(newUser, this.userUpdateId).subscribe(
-        //   data =>{
-        //     console.log(data);  
-        //     this.listUser();
-        //   }
-        // )
-        this.closeModal();  
-      }
-
     }
-
-        
-
   }
 
   listUser() {
@@ -147,15 +176,59 @@ closeModal() {
     )
   }
 
+  filterByRole(role: string) {
+    if(role === "ADMIN"){
+      this.userService.getUserList().subscribe(data => {
+        this.users = data.filter((user:User) => user.role === 'ADMIN');
+      });
+    }
+
+    if(role === "STUDENT"){
+      this.userService.getUserList().subscribe(data => {
+        this.users = data.filter((user:User) => user.role === 'STUDENT');
+      });
+    }
+
+    if(role === "TUTOR"){
+      this.userService.getUserList().subscribe(data => {
+        this.users = data.filter((user:User) => user.role === 'TUTOR');
+      });
+    }
+
+    if(role === "ALL"){
+      this.listUser();
+    }
+  }
+
+  deleteUserAccount(user:User) {
+    if (confirm('Do you want to delete this major?')) {
+      this.userService.deleteUser(user.id!).subscribe(
+        {
+          next: () => {
+            console.log('Delete Successfully');
+            this.listUser();
+          },
+          error: (error) => {
+            console.error('Delete failedly:', error);
+          }
+        }
+      )
+  
+      }
+  
+  }
 
 
-deleteUserAccount(_t15: any) {
-throw new Error('Method not implemented.');
-}
+  updateUserAccount(user: User) {
+    this.userFormUpdate.setValue  ({
+      username: user.username,
+      password: user.password,
+      email: user.email,
+      role: user.role
+    });
+    this.userUpdateId = user.id!;
+    this.openModalUpdate();
 
-
-updateUserAccount(_t15: any) {
-throw new Error('Method not implemented.');
-}
+  }
 
 }

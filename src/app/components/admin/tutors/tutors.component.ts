@@ -111,7 +111,7 @@ export class TutorsComponent implements OnInit {
   }
 
 
-    updateStudentAccount(tutor: Tutor) {
+  updateTutorAccount(tutor: Tutor) {
       this.tutorFormUpdate.patchValue  ({
         nameUpdate: tutor.name,
         birthdayUpdate: tutor.birthday,
@@ -119,6 +119,6 @@ export class TutorsComponent implements OnInit {
       });
       this.tutor = tutor;
       this.openModalUpdate()
-    }
+  }
 
 }

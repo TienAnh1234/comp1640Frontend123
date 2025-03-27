@@ -1,0 +1,49 @@
+<div class="container mt-4">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img [src]="user.avatar" class="rounded-circle mb-3" width="80" height="80" alt="Profile picture">
+            <h5 class="card-title">{{ user.name }}</h5>
+            <p class="text-muted">{{ user.job }}</p>
+          </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Programming Languages</h5>
+            <ul class="list-group">
+              <li class="list-group-item">Java / C#</li>
+              <li class="list-group-item">JavaScript / TypeScript</li>
+              <li class="list-group-item">Python</li>
+              <li class="list-group-item">C / C++</li>
+              <li class="list-group-item">HTML / CSS / SQL</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Blog Content -->
+      <div class="col-lg-8">
+        <div *ngFor="let blog of blogs" class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img [src]="blog.avatar" class="rounded-circle" width="50" height="50" alt="Author">
+              <div class="ms-3">
+                <h6 class="mb-0">{{ blog.author }}</h6>
+                <p class="text-muted small">{{ blog.title }}</p>
+              </div>
+            </div>
+            <p>{{ blog.content }}</p>
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-light"><i class="far fa-thumbs-up"></i> Like</button>
+              <button class="btn btn-light"><i class="far fa-comment-alt"></i> Comment</button>
+              <button class="btn btn-light"><i class="fas fa-share"></i> Share</button>
+            </div>
+            <input type="text" class="form-control mt-3" placeholder="Write a comment...">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

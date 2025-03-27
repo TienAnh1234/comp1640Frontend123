@@ -8,7 +8,10 @@ import { MajorsComponent } from './majors/majors.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UserAccountComponent } from './user-account/user-account.component';
-
+import { ClassroomComponent } from './classroom/classroom.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { FormsModule } from '@angular/forms';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 
 const routes: Routes = [
@@ -16,19 +19,22 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'ADMIN' }, 
     children :[
       {path: 'students', component: StudentsComponent},
       {path: 'tutors', component: TutorsComponent},
       {path: 'majors', component: MajorsComponent},
       {path: 'usersAccount', component: UserAccountComponent},
+      {path: 'classroom', component: ClassroomComponent},
 
 
       { path: '', redirectTo: '/admin/students', pathMatch: 'full' },
 
     ]
   },
-{ path: '', redirectTo: 'admin/students', pathMatch: 'full' },
-{ path: '**', redirectTo: 'admin/students', pathMatch: 'full' }
+// { path: '', redirectTo: 'admin/students', pathMatch: 'full' },
+// { path: '**', redirectTo: 'admin/students', pathMatch: 'full' }
 
 
 ];
@@ -37,13 +43,21 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    UserAccountComponent
+    UserAccountComponent,
+    StudentsComponent,
+    TutorsComponent,
+    MajorsComponent,
+    ClassroomComponent
   ],
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forChild(routes),
     CommonModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPaginationModule,
+    FormsModule
+
+    
 
 
   ]

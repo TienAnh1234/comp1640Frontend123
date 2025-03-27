@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Major } from 'src/app/common/major';
 import { Student } from 'src/app/common/student';
+import { AuthService } from 'src/app/services/auth.service';
 import { MajorService } from 'src/app/services/major.service';
 import { StudentService } from 'src/app/services/student.service';
 
@@ -24,11 +25,15 @@ export class StudentsComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private majorService: MajorService,
-              private studentService: StudentService) { }
+              private studentService: StudentService,
+              private authService: AuthService) { }
 
 
 
   ngOnInit(): void {
+
+        console.log(this.authService.getToken())
+
           this.studentFormUpdate = this.formBuilder.group({
             nameUpdate: ['', [Validators.required, Validators.minLength(3)]],
             birthdayUpdate: ['', [Validators.required, Validators.minLength(3)]],

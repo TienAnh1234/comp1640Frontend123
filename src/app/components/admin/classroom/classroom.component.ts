@@ -245,7 +245,15 @@ export class ClassroomComponent implements OnInit {
   }
 
   deleteClassOfTutor(tutor:Tutor){
-    
+    if (confirm('Do you want to delete this major?')) {
+      this.classroomService.deleteClassOfTutor(tutor.id!).subscribe(
+        data =>{
+          window.location.reload();
+        }
+      )
+    }else{
+      window.location.reload();
+    }
   }
 
 

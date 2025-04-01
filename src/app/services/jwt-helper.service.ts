@@ -29,9 +29,12 @@ export class JwtHelperService {
 
   getUserFromToken(token: string): any {
     const decoded = this.decodeToken(token);
-    if (decoded) {
+    console.log(decoded.sub)
+    console.log(decoded.role)
+
+    if (decoded) {;
       return {
-        username: decoded.username || '',    // Lấy username
+        username: decoded.sub || '',    // Lấy username
         role: decoded.role || '',            // Lấy role
       };
     }

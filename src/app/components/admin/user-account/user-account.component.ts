@@ -139,6 +139,10 @@ onSubmitUpdate() {
       console.log('Form không hợp lệ!', this.userForm.controls);
 
     }else{
+
+      if(this.users.some(user => user.username === this.userForm.value.username)){
+        alert(this.userForm.value.username + ' existed, Please choose another username!');
+      }else{
         const definedUserFormData = new FormData();
         definedUserFormData.append('username', this.userForm.value.username);
         definedUserFormData.append('password', this.userForm.value.password);
@@ -156,6 +160,7 @@ onSubmitUpdate() {
           }
         ) 
         this.closeModal();  
+      }
     }
   }
 

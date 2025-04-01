@@ -20,7 +20,7 @@ const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     canActivate: [AuthGuard],
-    data: { role: 'ADMIN' }, 
+    data: { role: ['ADMIN'] }, 
     children :[
       {path: 'students', component: StudentsComponent},
       {path: 'tutors', component: TutorsComponent},

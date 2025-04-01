@@ -5,6 +5,8 @@ import { BlogComponent } from './blog/blog.component';
 import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './user.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { FormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule } from '@angular/forms'; 
 
 
 const routes: Routes = [
@@ -13,15 +15,12 @@ const routes: Routes = [
     path: 'user',
     component: UserComponent,
     canActivate: [AuthGuard],
+    data: { role: ['TUTOR','STUDENT'] }, 
     children :[      
       {path: 'blog', component: BlogComponent},
       { path: '', redirectTo: '/user/blog', pathMatch: 'full' },
     ]
   },
-
-
-
-
 
 ];
 
@@ -32,7 +31,9 @@ const routes: Routes = [
   ],
   imports: [
     RouterModule.forRoot(routes),
-    CommonModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule 
   ]
 })
 export class UserModule { }

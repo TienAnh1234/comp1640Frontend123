@@ -22,15 +22,21 @@ export class AuthGuard implements CanActivate {
 
     if (!token || this.jwtHelper.isTokenExpired(token)) {
       alert('Bạn chưa đăng nhập!');
+      console.log('loi 1'); 
+
       this.router.navigate(['/login']); // Chuyển về trang đăng nhập
       return false;
     }
 
-    const requiredRole = route.data['role'];
-    const role = this.jwtHelper.getUserFromToken(token!).role;
-    console.log(role)
-    if (role !== requiredRole) {
+    const requiredRoles = route.data['role'];
+    const userRole  = this.jwtHelper.getUserFromToken(token!).role;
+    console.log(userRole )
+    console.log(requiredRoles )
+
+    if  (!requiredRoles.includes(userRole)) {
       alert('Bạn không có quyền truy cập!');
+      console.log('loi 2'); 
+
       this.router.navigate(['/login']); // Chuyển về trang đăng nhập
       return false;
     }

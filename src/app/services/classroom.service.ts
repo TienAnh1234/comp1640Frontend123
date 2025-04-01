@@ -21,9 +21,7 @@ export class ClassroomService {
 
 
   classroomsList: Classroom[]=[];
-  constructor(private HttpClient: HttpClient,
-              private tutorService: TutorService,
-              private studentService: StudentService
+  constructor(private HttpClient: HttpClient
   ) { }
 
 
@@ -39,6 +37,10 @@ export class ClassroomService {
 
   updateClassroom(classroom: Classroom):Observable<any>{
     return this.HttpClient.put(`${this.classrooomUrl}/update`, classroom, { responseType: 'text' });
+  }
+
+  deleteClassOfTutor(tutorId: number): Observable<void> {
+    return this.HttpClient.delete<void>(`${this.classrooomUrl}/delete/${tutorId}`);
   }
 
 }

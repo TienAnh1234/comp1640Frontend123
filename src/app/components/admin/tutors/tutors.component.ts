@@ -74,7 +74,7 @@ export class TutorsComponent implements OnInit {
     }else{
         const definedTutorFormData = new FormData();
         definedTutorFormData.append('id', this.tutor.id! + "");
-
+        
         definedTutorFormData.append('name', this.tutorFormUpdate.value.nameUpdate);
         definedTutorFormData.append('birthday', this.tutorFormUpdate.value.birthdayUpdate);
         definedTutorFormData.append('imageFile', this.tutor.imageFile!);

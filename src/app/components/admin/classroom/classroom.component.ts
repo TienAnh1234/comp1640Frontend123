@@ -197,11 +197,12 @@ export class ClassroomComponent implements OnInit {
 
         this.classroomService.saveClassroom(newClassroom).subscribe(
           data =>{
-            // this.listClassroom();
             console.log(data);
+            window.location.reload();
+
           }
         ) 
-      
+
     }
     this.ngOnInit()
 

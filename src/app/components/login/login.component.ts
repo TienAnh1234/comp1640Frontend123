@@ -47,8 +47,8 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      if(this.users.some(user => user.username === this.loginForm.value.username) && 
-        this.users.some(user => user.password === this.loginForm.value.password) ){
+      if(this.users.some(user => user.password === this.loginForm.value.password 
+        && user.username === this.loginForm.value.username) ){
 
         const { username, password} = this.loginForm.value;
         

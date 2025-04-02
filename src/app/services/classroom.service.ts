@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { from, Observable, Subject } from 'rxjs';
 import { Classroom } from '../common/classroom';
 import { StudentService } from './student.service';
@@ -27,6 +27,9 @@ export class ClassroomService {
 
 
   getClassroomList(): Observable<any> {
+    // const headers = new HttpHeaders({
+    //   'Authorization': 'Bearer ' + localStorage.getItem('token')
+    // });
     return this.HttpClient.get<any>(this.classrooomUrl);
   }
 

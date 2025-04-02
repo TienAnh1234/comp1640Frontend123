@@ -34,33 +34,31 @@
                     <strong>Bắt đầu:</strong> {{ schedule.startTime | date:'dd/MM/yyyy HH:mm' }} <br>
                     <strong>Kết thúc:</strong> {{ schedule.endTime | date:'dd/MM/yyyy HH:mm' }} <br>
                     <strong>Status:</strong> {{ schedule.status}} <br>
-
-                    <div class="d-flex align-items-center">
-                      <!-- Dropdown chọn trạng thái -->
-                      <select class="form-select form-select-sm w-auto me-3" [(ngModel)]="statusSchedule">
-                        <option value="" disabled selected>Chọn trạng thái</option>
-                        <option value="Attended">Attended</option>
-                        <option value="Absent">Absent</option>
-                      </select>
-                      <div *ngIf="userHold.role === 'TUTOR'">
-                        <!-- Nút Set Status -->
-                        <button class="btn btn-warning btn-sm me-2" (click)="updateStatusSchedule(schedule)">
-                          Set Status
-                        </button>
-            
-                        <!-- Nút Delete -->
-                        <button class="btn btn-danger btn-sm" (click)="deteteSchedule(schedule)">
-                          Delete
-                        </button>
-                      </div>
+                    
+                    <div *ngIf="userHold.role === 'TUTOR'">
+                      <div class="d-flex align-items-center">
+                        <!-- Dropdown chọn trạng thái -->
+                        <select class="form-select form-select-sm w-auto me-3" [(ngModel)]="schedule.status">
+                          <option value="" disabled selected>Chọn trạng thái</option>
+                          <option value="Attended">Attended</option>
+                          <option value="Absent">Absent</option>
+                        </select>
+                          <!-- Nút Set Status -->
+                          <button class="btn btn-warning btn-sm me-2" (click)="updateStatusSchedule(schedule)">
+                            Set Status
+                          </button>
+              
+                          <!-- Nút Delete -->
+                          <button class="btn btn-danger btn-sm" (click)="deteteSchedule(schedule)">
+                            Delete
+                          </button>
+                        </div>
                     </div>
                   </li>
                 </ul>
               </div>
               <!-- Nếu không có lịch học, hiển thị thông báo -->
               <p *ngIf="schedulesOfTutor.length === 0" class="text-center mt-2 text-muted">Chưa có lịch học nào.</p>
-
-              
             </div>
         </div>
       </div>

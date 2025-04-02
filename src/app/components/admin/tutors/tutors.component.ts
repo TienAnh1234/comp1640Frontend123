@@ -36,12 +36,12 @@ export class TutorsComponent implements OnInit {
             majorUpdate: ['', [Validators.required]],
             usernameUpdate: []
           });
-    this.listTutors();
+    this.listTutor();
     this.listMajor();
   }
 
 
-  listTutors() {
+  listTutor() {
     this.tutorService.getTutorList().subscribe(
       data =>{
         this.tutors = data;
@@ -82,14 +82,10 @@ export class TutorsComponent implements OnInit {
         definedTutorFormData.append('majorDtoId', this.tutorFormUpdate.value.majorUpdate);
         definedTutorFormData.append('file', this.selectedFile);
 
-        // definedStudentFormData.forEach((value, key) => {
-        //   console.log(key, value);
-        // });
-
 
         this.tutorService.updateTutor(definedTutorFormData,this.tutor.id!).subscribe(
           data =>{
-            this.listTutors();
+            this.listTutor();
             console.log(data)
           }
         ) 

@@ -6,12 +6,13 @@ import { AdminComponent } from './admin.component';
 import { TutorsComponent } from './tutors/tutors.component';
 import { MajorsComponent } from './majors/majors.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { ClassroomComponent } from './classroom/classroom.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { AuthInterceptor } from 'src/app/auth.interceptor';
 
 
 const routes: Routes = [
@@ -46,7 +47,7 @@ const routes: Routes = [
     UserAccountComponent,
     StudentsComponent,
     TutorsComponent,
-    MajorsComponent,
+    MajorsComponent,  
     ClassroomComponent
   ],
   imports: [
@@ -56,10 +57,9 @@ const routes: Routes = [
     HttpClientModule,
     NgxPaginationModule,
     FormsModule
-
-    
-
-
+  ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }  
   ]
 })
 export class AdminModule { }

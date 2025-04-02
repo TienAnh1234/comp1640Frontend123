@@ -280,10 +280,10 @@ export class BlogComponent implements OnInit {
     const endTime = this.scheduleForm.value.endTime
 
 
-    this.scheduleService.bookSchedule(new Schedule(null,student,tutor,startTime,endTime,'NOT YET')).subscribe(
+    this.scheduleService.bookSchedule(new Schedule(null,student,tutor,startTime,endTime,'Not yet')).subscribe(
       data =>{
         console.log(data)
-        this.loadAllData();
+        this.getScheduleList();
         this.closeModalBookSchedule();
       }
     ) 
@@ -314,11 +314,11 @@ export class BlogComponent implements OnInit {
   
 
   updateStatusSchedule(schedule: Schedule){
-    if(this.statusSchedule === ''){
+    if(schedule.status === ''){
       alert('Set status successfully')
       this.getScheduleList();
     }else{
-      schedule.status = this.statusSchedule
+      console.log(schedule.status)
       this.scheduleService.updateSchedule(schedule, schedule.id!).subscribe(
         data =>{
           console.log(data)

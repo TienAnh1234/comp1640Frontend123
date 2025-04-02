@@ -7,6 +7,8 @@ import { UserComponent } from './user.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { FormsModule } from '@angular/forms'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from 'src/app/auth.interceptor';
 
 
 const routes: Routes = [
@@ -34,6 +36,10 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule 
-  ]
+  ],
+    providers: [
+      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }  
+    ]
+  
 })
 export class UserModule { }

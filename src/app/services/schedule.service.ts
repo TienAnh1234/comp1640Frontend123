@@ -15,14 +15,14 @@ export class ScheduleService {
     return this.http.post<Schedule>(`${this.apiUrl}/book_schedule`, schedule);
   }
 
-  getScheduleList(tutorId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${tutorId}`);
+  getScheduleList(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${userId}`);
   }
 
   updateSchedule(schedule: Schedule, scheduleId: number):Observable<any>{
     return this.http.put(`${this.apiUrl}/update/${scheduleId}`, schedule);
   }
-
+  
   deleteSchedule(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }

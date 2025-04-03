@@ -31,6 +31,7 @@
                 <ul class="list-group">
                   <li class="list-group-item" *ngFor="let schedule of schedulesOfTutor">
                     <strong>Học viên:</strong> {{ schedule.studentDto?.username }} <br>
+                    <strong>Tutor:</strong> {{ schedule.tutorDto?.username }} <br>
                     <strong>Bắt đầu:</strong> {{ schedule.startTime | date:'dd/MM/yyyy HH:mm' }} <br>
                     <strong>Kết thúc:</strong> {{ schedule.endTime | date:'dd/MM/yyyy HH:mm' }} <br>
                     <strong>Status:</strong> {{ schedule.status}} <br>
@@ -60,6 +61,41 @@
               <!-- Nếu không có lịch học, hiển thị thông báo -->
               <p *ngIf="schedulesOfTutor.length === 0" class="text-center mt-2 text-muted">Chưa có lịch học nào.</p>
             </div>
+
+          <div *ngIf="userHold.role === 'TUTOR'">
+            <button class="btn btn-info mt-2 w-100" (click)="checkShowListStudentOrTutorOutSide()">My Students</button>
+              <div *ngIf="showListStudentsOfTutorOutSide" class="mt-3">
+                <h6 class="text-center">Danh sách học sinh</h6>
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let student of studentsOfTutor">
+                    <span>{{ student.name }}</span>
+                    <button class="btn btn-primary btn-sm" (click)="setRecipient(student.username!)">
+                      Chat
+                    </button>
+                  </li>
+                </ul>
+              </div>
+          </div>
+
+
+          <div *ngIf="userHold.role === 'STUDENT'">
+            <button class="btn btn-info mt-2 w-100" (click)="checkShowListStudentOrTutorOutSide()">My Tutors</button>
+              <div *ngIf="showListStudentsOfTutorOutSide" class="mt-3">
+                <h6 class="text-center">List Tutors</h6>
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let tutor of tutorsOfStudent">
+                    <span>{{ tutor.name }}</span>
+                    <button class="btn btn-primary btn-sm" (click)="setRecipient(tutor.username!)">
+                      Chat
+                    </button>
+                  </li>
+                </ul>
+              </div>
+          </div>
+
+
+            <button class="btn btn-danger mt-2 w-100" (click)="logoutUser()">Logout</button>
+
         </div>
       </div>
 
@@ -177,6 +213,37 @@
 
           <button type="submit" class="btn btn-success w-100">Book Schedule</button>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="myModalChatting" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true" #myModalChatting>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModalChatting()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="chat-box border rounded p-2" style="height: 300px; overflow-y: auto;">
+          <div *ngFor="let wbschatmessage of wbschatmessages">
+
+            <div *ngIf="wbschatmessage.sender === recipientName" class="d-flex justify-content-start mb-2">
+                <div class="alert alert-secondary">{{wbschatmessage.content}} </div>
+            </div>
+
+            <div *ngIf="wbschatmessage.sender === userHold.username" class="d-flex justify-content-end mb-2">
+                <div class="alert alert-primary">{{wbschatmessage.content}} </div>
+            </div>
+
+        </div>
+        </div>
+        <div class="input-group mt-3">
+          <input type="text" class="form-control" [(ngModel)]="message" placeholder="Type a message...">
+          <button class="btn btn-primary" (click) = "sendMessage()">Send</button>
+        </div>
       </div>
     </div>
   </div>

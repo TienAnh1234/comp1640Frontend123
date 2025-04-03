@@ -42,6 +42,7 @@ export class AuthGuard implements CanActivate {
     }
 
     return true;
+    
   }
 
   constructor(private authService: AuthService, private router: Router, private jwtHelper: JwtHelperService) {}

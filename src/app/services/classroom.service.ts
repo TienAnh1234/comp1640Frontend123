@@ -27,9 +27,6 @@ export class ClassroomService {
 
 
   getClassroomList(): Observable<any> {
-    // const headers = new HttpHeaders({
-    //   'Authorization': 'Bearer ' + localStorage.getItem('token')
-    // });
     return this.HttpClient.get<any>(this.classrooomUrl);
   }
 

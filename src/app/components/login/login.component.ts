@@ -6,6 +6,7 @@ import { User } from 'src/app/common/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { JwtHelperService } from 'src/app/services/jwt-helper.service';
 import { UserService } from 'src/app/services/user.service';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-login',
@@ -22,9 +23,25 @@ export class LoginComponent implements OnInit {
               private authService: AuthService, 
               private userService: UserService,
               private jwtHelperService: JwtHelperService,
-              private router: Router) { }
+              private router: Router, 
+              private jwtHelper: JwtHelperService,
+              private websocketService: WebsocketService) { }
 
   ngOnInit(): void {
+    const token = this.authService.getToken();
+    if (!token || this.jwtHelper.isTokenExpired(token)) {
+      console.log('loi 1'); 
+    }else{
+      const userRole  = this.jwtHelper.getUserFromToken(token!).role;
+      if(userRole === 'STUDENT' || userRole === 'TUTOR'){
+        this.router.navigate(['/user']);
+
+      }else{
+        this.router.navigate(['/admin']);
+      }
+
+    }
+
     this.createForm();
     this.listUser();
   }
@@ -61,6 +78,8 @@ export class LoginComponent implements OnInit {
             }else{
               this.router.navigate(['/user']);
             }
+            this.websocketService.connect(username);
+
             alert('Đăng nhập thành công!');
           },
           error: (err) => {

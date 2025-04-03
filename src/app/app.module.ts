@@ -12,7 +12,6 @@ import { UserModule } from './components/user/user.module';
 import { LoginComponent } from './components/login/login.component';
 
 
-
 const routes: Routes = [
 { path: 'login', component: LoginComponent },
 { path: 'admin', component: AdminComponent },
@@ -40,5 +39,6 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   bootstrap: [AppComponent]
-})
+}
+)
 export class AppModule { }

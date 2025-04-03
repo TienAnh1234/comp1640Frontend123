@@ -8,6 +8,7 @@ import { Schedule } from 'src/app/common/schedule';
 import { Student } from 'src/app/common/student';
 import { Tutor } from 'src/app/common/tutor';
 import { User } from 'src/app/common/user';
+import { Wbschatmessage } from 'src/app/common/wbschatmessage';
 import { AuthService } from 'src/app/services/auth.service';
 import { BlogService } from 'src/app/services/blog.service';
 import { ClassroomService } from 'src/app/services/classroom.service';
@@ -17,6 +18,7 @@ import { ScheduleService } from 'src/app/services/schedule.service';
 import { StudentService } from 'src/app/services/student.service';
 import { TutorService } from 'src/app/services/tutor.service';
 import { UserService } from 'src/app/services/user.service';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-blog',
@@ -27,10 +29,13 @@ export class BlogComponent implements OnInit {
 
   @ViewChild('myModalUpdateUser') modalUpdateUser: ElementRef | undefined;
   @ViewChild('myModalBookSchedule') modalBookSchedule: ElementRef | undefined;
+  @ViewChild('myModalChatting') modalChatting: ElementRef | undefined;
+
 
   showNotification = false;
   showListSchedule = false;
   showListStudentsOfTutor = false;
+  showListStudentsOfTutorOutSide = false;
   selectedFile!: File;
 
 
@@ -39,6 +44,13 @@ export class BlogComponent implements OnInit {
   userHold = {username:'',role:'',name:'',birthday:new Date(),imageFile:'',id:0};
   students: Student[] =[];
   studentsOfTutor: Student[] =[];
+  tutorsOfStudent: Student[] =[];
+
+
+  wbschatmessages: Wbschatmessage[] = [];
+  recipientName: string = '';
+  recipientId!: number
+  message: string = '';
 
   statusSchedule: string = ''
 
@@ -70,7 +82,8 @@ export class BlogComponent implements OnInit {
               private formBuilder: FormBuilder,
               private majorService: MajorService,
               private scheduleService: ScheduleService,
-              private classroomService: ClassroomService
+              private classroomService: ClassroomService,
+              private websocketService: WebsocketService
               
   ) { }
 
@@ -92,7 +105,47 @@ export class BlogComponent implements OnInit {
     this.token = this.authService.getToken()!;
     this.userHold = this.jwtHelperService.getUserFromToken(this.token)
     this.loadAllData()
+
+    this.websocketService.messageSubject.subscribe(wbschatmessage => {
+      try {
+          this.wbschatmessages.push(wbschatmessage);
+      } catch (error) {
+          console.log(error)
+      }
+      
+    });
   }
+
+  setRecipient(recipient: string){
+    this.recipientName = recipient;
+    this.wbschatmessages = [];
+    if(this.recipientName != ""){
+      for (let i = 0; i < this.users.length; i++) {
+        if (this.users[i].username === this.recipientName) {
+          this.recipientId = this.users[i].id!;
+          break;
+        }
+      }
+      const user = this.users.filter(user => user.username === this.userHold.username)
+
+      this.websocketService.getOldMessages(user[0].id!, this.recipientId ).subscribe(data => {
+
+        this.wbschatmessages = data;
+        for (let i = 0; i < this.wbschatmessages.length; i++) {
+            console.log(i +' ' + this.wbschatmessages[i].sender +' ' + this.wbschatmessages[i].recipient )
+          }
+      });
+    }
+    this.openModalChatting();
+  }
+
+  sendMessage(){
+    const wbschatmessage = new Wbschatmessage(this.userHold.username,this.recipientName, this.message)
+    this.wbschatmessages.push(wbschatmessage);
+    this.websocketService.sendMessage(this.userHold.username, this.recipientName, this.message);
+    this.message ='';
+  }
+
 
   isTimeValid(): boolean {
     const startTime = new Date(this.scheduleForm.value.startTime);
@@ -148,6 +201,23 @@ export class BlogComponent implements OnInit {
 
   openModalUpdate() {
       const modalElement = document.getElementById('myModalUpdateUser');
+      if (modalElement) {
+        modalElement.style.display = 'block';
+      }
+  }
+
+
+  
+  closeModalChatting(){
+    if (this.modalChatting) {
+      this.modalChatting.nativeElement.style.display = 'none';
+    }else{
+    console.log(123)
+    }
+  }
+
+  openModalChatting() {
+      const modalElement = document.getElementById('myModalChatting');
       if (modalElement) {
         modalElement.style.display = 'block';
       }
@@ -348,6 +418,48 @@ export class BlogComponent implements OnInit {
       
     }
   }
+
+  listStudentsOfTutor(){
+    this.studentsOfTutor = []
+    const classroomOfTutor = this.classrooms.filter(classroom => classroom.tutorId === this.userHold.id)
+    for (let i = 0; i < classroomOfTutor[0].studentsId.length; i++) {
+      this.studentsOfTutor.push(this.students.filter(student => student.id === classroomOfTutor[0].studentsId[i])[0])
+      console.log(this.studentsOfTutor[i])
+    }
+  }
+
+  listTutorsOfStudent(){
+    this.tutorsOfStudent = []
+    const result = this.classrooms.filter(classroom => classroom.studentsId.includes(this.userHold.id));
+    for (let i = 0; i < result.length; i++) {
+      this.tutorsOfStudent.push(this.tutors.filter(tutor => tutor.id === result[i].tutorId)[0])
+      console.log(this.tutorsOfStudent[i])
+    }
+  }
+
+  checkShowListStudentOrTutorOutSide(){
+    if(this.showListStudentsOfTutorOutSide == true){
+      this.showListStudentsOfTutorOutSide = false;
+    }else{
+      this.showListStudentsOfTutorOutSide = true;
+      if(this.userHold.role == "TUTOR"){
+        this.listStudentsOfTutor()
+      }else{
+        this.listTutorsOfStudent()
+      }
+
+      
+    }
+  }
+
+
+
+
+
+  logoutUser(){
+    this.authService.logout()
+  }
+
 
 
 }

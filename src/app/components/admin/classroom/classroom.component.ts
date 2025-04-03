@@ -255,7 +255,7 @@ export class ClassroomComponent implements OnInit {
     }else{
       window.location.reload();
     }
-  }
+  } 
 
 
 
